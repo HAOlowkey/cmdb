@@ -1,0 +1,34 @@
+[app]
+name = "cmdb"
+key  = "this is your app key"
+
+[http]
+host = "127.0.0.1"
+port = "8848"
+
+[grpc]
+host = "127.0.0.1"
+port = "18848"
+
+
+[keyauth]
+host = "127.0.0.1"
+port = "18050"
+client_id = "admin"
+client_secret = "123456"
+
+
+[mysql]
+host = "192.168.25.190"
+port = "3306"
+database = "cmdb"
+username = "root"
+password = "Root@123！"
+
+
+
+[log]
+level = "debug"
+path = "logs"
+format = "text"
+to = "stdout"
