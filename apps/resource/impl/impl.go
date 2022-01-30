@@ -21,6 +21,7 @@ type service struct {
 	db       *sql.DB
 	log      logger.Logger
 	resource resource.ServiceServer
+	resource.UnimplementedServiceServer
 }
 
 func (s *service) Config() error {
