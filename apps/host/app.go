@@ -4,12 +4,16 @@ import (
 	"crypto/sha1"
 	"encoding/json"
 	"fmt"
+	"net/http"
 	"strings"
 	"time"
 
 	"github.com/HAOlowkey/cmdb/apps/resource"
 	"github.com/go-playground/validator/v10"
 	"github.com/imdario/mergo"
+	"github.com/infraboard/mcube/http/request"
+
+	pb_request "github.com/infraboard/mcube/pb/request"
 )
 
 const (
@@ -81,6 +85,29 @@ func NewDescribeHostRequestById(id string) *DescribeHostRequest {
 	}
 }
 
+func NewDeleteHostRequestWithID(id string) *ReleaseHostRequest {
+	return &ReleaseHostRequest{
+		Id:          id,
+		ReleasePlan: &resource.ReleasePlan{},
+	}
+}
+
+func NewUpdateHostRequest(id string) *UpdateHostRequest {
+	return &UpdateHostRequest{
+		Id:             id,
+		UpdateMode:     pb_request.UpdateMode_PUT,
+		UpdateHostData: &UpdateHostData{},
+	}
+}
+
+func NewPatchHostRequest(id string) *UpdateHostRequest {
+	return &UpdateHostRequest{
+		Id:             id,
+		UpdateMode:     pb_request.UpdateMode_PATCH,
+		UpdateHostData: &UpdateHostData{},
+	}
+}
+
 func NewHostSet() *HostSet {
 	return &HostSet{
 		Items: []*Host{},
@@ -137,4 +164,13 @@ func (host *Host) Patch(data *UpdateHostData) error {
 	}
 
 	return nil
+}
+
+func NewQueryHostRequestFromHTTP(r *http.Request) *QueryHostRequest {
+	qs := r.URL.Query()
+
+	return &QueryHostRequest{
+		Page:     request.NewPageRequestFromHTTP(r),
+		Keywords: qs.Get("keywords"),
+	}
 }

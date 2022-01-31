@@ -1,1 +1,96 @@
 package http
+
+import (
+	"net/http"
+
+	"github.com/HAOlowkey/cmdb/apps/host"
+	"github.com/infraboard/mcube/http/context"
+	"github.com/infraboard/mcube/http/request"
+	"github.com/infraboard/mcube/http/response"
+	pb_request "github.com/infraboard/mcube/pb/request"
+)
+
+func (h *handler) QueryHost(w http.ResponseWriter, r *http.Request) {
+	query := host.NewQueryHostRequestFromHTTP(r)
+	set, err := h.service.QueryHost(r.Context(), query)
+	if err != nil {
+		response.Failed(w, err)
+		return
+	}
+	response.Success(w, set)
+}
+
+func (h *handler) CreateHost(w http.ResponseWriter, r *http.Request) {
+	ins := host.NewDefaultHost()
+	if err := request.GetDataFromRequest(r, ins); err != nil {
+		response.Failed(w, err)
+		return
+	}
+
+	ins, err := h.service.SyncHost(r.Context(), ins)
+	if err != nil {
+		response.Failed(w, err)
+		return
+	}
+
+	response.Success(w, ins)
+}
+
+func (h *handler) DescribeHost(w http.ResponseWriter, r *http.Request) {
+	ctx := context.GetContext(r)
+	req := host.NewDescribeHostRequestById(ctx.PS.ByName("id"))
+	set, err := h.service.DescribeHost(r.Context(), req)
+	if err != nil {
+		response.Failed(w, err)
+		return
+	}
+	response.Success(w, set)
+}
+
+func (h *handler) DeleteHost(w http.ResponseWriter, r *http.Request) {
+	ctx := context.GetContext(r)
+	req := host.NewDeleteHostRequestWithID(ctx.PS.ByName("id"))
+	set, err := h.service.ReleaseHost(r.Context(), req)
+	if err != nil {
+		response.Failed(w, err)
+		return
+	}
+	response.Success(w, set)
+}
+
+func (h *handler) PutHost(w http.ResponseWriter, r *http.Request) {
+	ctx := context.GetContext(r)
+	req := host.NewUpdateHostRequest(ctx.PS.ByName("id"))
+
+	if err := request.GetDataFromRequest(r, req.UpdateHostData); err != nil {
+		response.Failed(w, err)
+		return
+	}
+
+	ins, err := h.service.UpdateHost(r.Context(), req)
+	if err != nil {
+		response.Failed(w, err)
+		return
+	}
+
+	response.Success(w, ins)
+}
+
+func (h *handler) PatchHost(w http.ResponseWriter, r *http.Request) {
+	ctx := context.GetContext(r)
+	req := host.NewPatchHostRequest(ctx.PS.ByName("id"))
+	req.UpdateMode = pb_request.UpdateMode_PATCH
+
+	if err := request.GetDataFromRequest(r, req.UpdateHostData); err != nil {
+		response.Failed(w, err)
+		return
+	}
+
+	ins, err := h.service.UpdateHost(r.Context(), req)
+	if err != nil {
+		response.Failed(w, err)
+		return
+	}
+
+	response.Success(w, ins)
+}

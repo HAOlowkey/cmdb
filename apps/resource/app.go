@@ -1,6 +1,11 @@
 package resource
 
-import "strings"
+import (
+	"net/http"
+	"strings"
+
+	"github.com/infraboard/mcube/http/request"
+)
 
 const (
 	AppName = "resource"
@@ -40,4 +45,36 @@ func (info *Information) PublicIPToString() string {
 
 func (info *Information) PrivateIPToString() string {
 	return strings.Join(info.PrivateIp, ",")
+}
+
+func NewSearchRequestFromHTTP(r *http.Request) (*SearchRequest, error) {
+
+	req := &SearchRequest{
+		Page: request.NewPageRequestFromHTTP(r),
+	}
+
+	qs := r.URL.Query()
+
+	vendor := qs.Get("vendor")
+
+	if vendor != "" {
+		v, err := ParseVendorFromString(vendor)
+		if err != nil {
+			return nil, err
+		}
+		req.Vendor = &v
+	}
+
+	rt := qs.Get("type")
+
+	if rt != "" {
+		v, err := ParseTypeFromString(vendor)
+		if err != nil {
+			return nil, err
+		}
+		req.Type = &v
+	}
+
+	req.Keywords = qs.Get("keywords")
+	return req, nil
 }
