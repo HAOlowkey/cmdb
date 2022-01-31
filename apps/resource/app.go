@@ -33,3 +33,11 @@ func (info *Information) LoadPublicIPString(str string) {
 func (set *ResourceSet) Add(resource *Resource) {
 	set.Items = append(set.Items, resource)
 }
+
+func (info *Information) PublicIPToString() string {
+	return strings.Join(info.PublicIp, ",")
+}
+
+func (info *Information) PrivateIPToString() string {
+	return strings.Join(info.PrivateIp, ",")
+}
