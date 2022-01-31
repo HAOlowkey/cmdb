@@ -135,4 +135,6 @@ func (host *Host) Patch(data *UpdateHostData) error {
 	if host.Base.ResourceHash != oldResourceHash {
 		host.Base.ResourceHashChanged = true
 	}
+
+	return nil
 }
