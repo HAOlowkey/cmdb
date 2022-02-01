@@ -17,4 +17,5 @@ coverage.txt
 etc/cmdb.toml
 etc/cmdb.env
 etc/ssl
+etc/unit-test.env
 cmdb
