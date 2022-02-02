@@ -3,16 +3,21 @@ module github.com/HAOlowkey/cmdb
 go 1.17
 
 require (
+	gitee.com/go-course/cmdb v0.0.0-20220122105551-f93c828e0f1a
 	github.com/BurntSushi/toml v1.0.0
 	github.com/caarlos0/env/v6 v6.9.1
 	github.com/go-playground/validator/v10 v10.10.0
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/imdario/mergo v0.3.12
 	github.com/infraboard/keyauth v0.7.0
-	github.com/infraboard/mcube v1.5.9
+	github.com/infraboard/mcube v1.6.1
 	github.com/rs/xid v1.3.0
 	github.com/spf13/cobra v1.3.0
 	github.com/stretchr/testify v1.7.0
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/billing v1.0.340
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb v1.0.340
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.335
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.340
 	google.golang.org/grpc v1.43.0
 	google.golang.org/protobuf v1.27.1
 )
