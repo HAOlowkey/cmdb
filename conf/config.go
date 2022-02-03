@@ -4,31 +4,30 @@ import (
 	"context"
 	"fmt"
 	"time"
-	
-"sync"
+
 	"database/sql"
- 	_ "github.com/go-sql-driver/mysql"
+	"sync"
 
-kc "github.com/infraboard/keyauth/client"
+	_ "github.com/go-sql-driver/mysql"
 
-
-
-
+	kc "github.com/infraboard/keyauth/client"
 )
 
 var (
-db *sql.DB
+	db *sql.DB
+)
 
+const (
+	CIPHER_TEXT_PREFIX = "@ciphered@"
 )
 
 func newConfig() *Config {
 	return &Config{
-		App:     newDefaultAPP(),
-		Log:     newDefaultLog(),
-MySQL:   newDefaultMySQL(),
+		App:   newDefaultAPP(),
+		Log:   newDefaultLog(),
+		MySQL: newDefaultMySQL(),
 
-Keyauth: newDefaultKeyauth(),
-
+		Keyauth: newDefaultKeyauth(),
 	}
 }
 
@@ -36,10 +35,9 @@ Keyauth: newDefaultKeyauth(),
 type Config struct {
 	App   *app   `toml:"app"`
 	Log   *log   `toml:"log"`
-MySQL *mysql `toml:"mysql"`
+	MySQL *mysql `toml:"mysql"`
 
-Keyauth  *keyauth  `toml:"keyauth"`
-
+	Keyauth *keyauth `toml:"keyauth"`
 }
 
 type app struct {
@@ -114,9 +112,9 @@ func newDefaultLog() *log {
 
 // Auth auth 配置
 type keyauth struct {
-	Host      string `toml:"host" env:"KEYAUTH_HOST"`
-	Port      string `toml:"port" env:"KEYAUTH_PORT"`
-	ClientID string `toml:"client_id" env:"KEYAUTH_CLIENT_ID"`
+	Host         string `toml:"host" env:"KEYAUTH_HOST"`
+	Port         string `toml:"port" env:"KEYAUTH_PORT"`
+	ClientID     string `toml:"client_id" env:"KEYAUTH_CLIENT_ID"`
 	ClientSecret string `toml:"client_secret" env:"KEYAUTH_CLIENT_SECRET"`
 }
 
@@ -142,8 +140,6 @@ func (a *keyauth) Client() (*kc.Client, error) {
 func newDefaultKeyauth() *keyauth {
 	return &keyauth{}
 }
-
-
 
 type mysql struct {
 	Host        string `toml:"host" env:"MYSQL_HOST"`
@@ -205,4 +201,3 @@ func (m *mysql) GetDB() (*sql.DB, error) {
 	}
 	return db, nil
 }
-

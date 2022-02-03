@@ -5,4 +5,5 @@ import (
 	_ "github.com/HAOlowkey/cmdb/apps/book/impl"
 	_ "github.com/HAOlowkey/cmdb/apps/host/impl"
 	_ "github.com/HAOlowkey/cmdb/apps/resource/impl"
+	_ "github.com/HAOlowkey/cmdb/apps/secret/impl"
 )

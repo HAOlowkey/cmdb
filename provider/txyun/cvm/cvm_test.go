@@ -7,6 +7,7 @@ import (
 
 	"github.com/HAOlowkey/cmdb/provider/txyun/connectivity"
 	"github.com/HAOlowkey/cmdb/provider/txyun/cvm"
+	"github.com/HAOlowkey/cmdb/utils"
 	"github.com/infraboard/mcube/logger/zap"
 	"github.com/stretchr/testify/assert"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/regions"
@@ -52,4 +53,30 @@ func init() {
 	operator = cvm.NewCvmOperator(client.CvmClient())
 
 	zap.DevelopmentSetup()
+}
+
+func TestInquiryPrice(t *testing.T) {
+	should := assert.New(t)
+
+	req := txcvm.NewInquiryPriceRunInstancesRequest()
+	req.Placement = &txcvm.Placement{
+		Zone: utils.StringPtr("ap-shanghai-2"),
+	}
+	req.ImageId = utils.StringPtr("img-l5eqiljn")
+	req.InstanceType = utils.StringPtr("S1.SMALL1")
+	req.InstanceChargeType = utils.StringPtr("SPOTPAID")
+	err := operator.InquiryPrice(req)
+	should.NoError(err)
+
+}
+
+func TestDescribeZones(t *testing.T) {
+	operator.DescribeZones()
+}
+
+func TestDescribeInstanceType(t *testing.T) {
+	operator.DescribeInstanceType()
+}
+
+func TestCreate(t *testing.T) {
 }
