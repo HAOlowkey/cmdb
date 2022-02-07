@@ -45,7 +45,7 @@ func init() {
 		panic("empty TX_CLOUD_SECRET_ID")
 	}
 
-	if secretKey = os.Getenv("TX_CLOUD_SECRET_KEY"); secretKey == "" {
+	if secretKey = os.Getenv("g"); secretKey == "" {
 		panic("empty TX_CLOUD_SECRET_KEY")
 	}
 

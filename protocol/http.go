@@ -28,14 +28,14 @@ func NewHTTPService() *HTTPService {
 	if err != nil {
 		panic(err)
 	}
-	auther := interceptor.NewHTTPAuther(c)
+	author := interceptor.NewHTTPAuther(c)
 
 	r := httprouter.New()
 	r.Use(recovery.NewWithLogger(zap.L().Named("Recovery")))
 	r.Use(accesslog.NewWithLogger(zap.L().Named("AccessLog")))
 	r.Use(cors.AllowAll())
 	r.EnableAPIRoot()
-	r.SetAuther(auther)
+	r.SetAuther(author)
 	r.Auth(false)
 
 	server := &http.Server{
