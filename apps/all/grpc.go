@@ -6,4 +6,5 @@ import (
 	_ "github.com/HAOlowkey/cmdb/apps/host/impl"
 	_ "github.com/HAOlowkey/cmdb/apps/resource/impl"
 	_ "github.com/HAOlowkey/cmdb/apps/secret/impl"
+	_ "github.com/HAOlowkey/cmdb/apps/task/impl"
 )
