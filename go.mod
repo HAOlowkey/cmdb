@@ -3,22 +3,23 @@ module github.com/HAOlowkey/cmdb
 go 1.17
 
 require (
-	gitee.com/go-course/cmdb v0.0.0-20220122105551-f93c828e0f1a
+	gitee.com/go-course/cmdb v0.0.0-20220212103144-3604728d417b
 	github.com/BurntSushi/toml v1.0.0
 	github.com/caarlos0/env/v6 v6.9.1
 	github.com/go-playground/validator/v10 v10.10.0
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/imdario/mergo v0.3.12
-	github.com/infraboard/keyauth v0.7.0
-	github.com/infraboard/mcube v1.6.1
+	github.com/infraboard/keyauth v0.7.2
+	github.com/infraboard/mcube v1.6.5
 	github.com/rs/xid v1.3.0
 	github.com/spf13/cobra v1.3.0
 	github.com/stretchr/testify v1.7.0
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/billing v1.0.340
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb v1.0.340
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.335
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.340
-	google.golang.org/grpc v1.43.0
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/billing v1.0.342
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb v1.0.342
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.342
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.342
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sts v1.0.342
+	google.golang.org/grpc v1.44.0
 	google.golang.org/protobuf v1.27.1
 )
 
@@ -35,13 +36,13 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
-	go.mongodb.org/mongo-driver v1.7.1 // indirect
+	go.mongodb.org/mongo-driver v1.8.3 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
-	go.uber.org/zap v1.18.1 // indirect
-	golang.org/x/crypto v0.0.0-20210817164053-32db794688a5 // indirect
-	golang.org/x/net v0.0.0-20210813160813-60bc85c4be6d // indirect
-	golang.org/x/sys v0.0.0-20211205182925-97ca703d548d // indirect
+	go.uber.org/zap v1.20.0 // indirect
+	golang.org/x/crypto v0.0.0-20220131195533-30dcbda58838 // indirect
+	golang.org/x/net v0.0.0-20220127200216-cd36cc0744dd // indirect
+	golang.org/x/sys v0.0.0-20220204135822-1c1b9b1eba6a // indirect
 	golang.org/x/text v0.3.7 // indirect
 	google.golang.org/genproto v0.0.0-20211208223120-3a66f561d7aa // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect

@@ -14,6 +14,19 @@ import (
 type CvmOperator struct {
 	client *cvm.Client
 	log    logger.Logger
+	*AccountIdGetter
+}
+
+type AccountIdGetter struct {
+	accountId string
+}
+
+func (o *AccountIdGetter) WithAccountId(aid string) {
+	o.accountId = aid
+}
+
+func (o *AccountIdGetter) GetAccountId() string {
+	return o.accountId
 }
 
 func NewCvmOperator(client *cvm.Client) *CvmOperator {
