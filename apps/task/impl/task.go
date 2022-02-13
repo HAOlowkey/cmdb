@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/infraboard/mcube/exception"
+	"github.com/infraboard/mcube/sqlbuilder"
 
 	"github.com/HAOlowkey/cmdb/apps/resource"
 	"github.com/HAOlowkey/cmdb/apps/secret"
@@ -56,7 +57,8 @@ func (s *service) CreatTask(ctx context.Context, req *task.CreateTaskRequst) (
 	}
 
 	// 资源同步
-	syncCtx, _ := context.WithTimeout(context.Background(), time.Minute*30)
+	syncCtx, cancel := context.WithTimeout(context.Background(), time.Minute*30)
+	defer cancel()
 	switch req.ResourceType {
 	case resource.Type_HOST:
 		go s.syncHost(syncCtx, secret, t, s.SyncTaskCallback)
@@ -74,12 +76,115 @@ func (s *service) CreatTask(ctx context.Context, req *task.CreateTaskRequst) (
 	return t, nil
 }
 
-func (s *service) QueryTask(ctx context.Context, req *task.QueryTaskRequest) (*task.TaskSet, error) {
-	return nil, nil
+func (s *service) QueryTask(ctx context.Context, req *task.QueryTaskRequest) (
+	*task.TaskSet, error) {
+	query := sqlbuilder.NewQuery(queryTaskSQL)
+
+	querySQL, args := query.Order("start_at").Desc().Limit(req.Page.ComputeOffset(), uint(req.Page.PageSize)).BuildQuery()
+	s.log.Debugf("sql: %s", querySQL)
+
+	queryStmt, err := s.db.Prepare(querySQL)
+	if err != nil {
+		return nil, exception.NewInternalServerError("prepare query task error, %s", err.Error())
+	}
+	defer queryStmt.Close()
+
+	rows, err := queryStmt.Query(args...)
+	if err != nil {
+		return nil, exception.NewInternalServerError(err.Error())
+	}
+	defer rows.Close()
+
+	set := task.NewTaskSet()
+	for rows.Next() {
+		ins := task.NewDefaultTask()
+		err := rows.Scan(
+			&ins.Id, &ins.Region, &ins.ResourceType, &ins.SecretId, &ins.SecretDescription, &ins.Timeout,
+			&ins.Status, &ins.Message, &ins.StartAt, &ins.EndAt, &ins.TotalSucceed, &ins.TotalFailed,
+		)
+		if err != nil {
+			return nil, exception.NewInternalServerError("query task error, %s", err.Error())
+		}
+		set.Add(ins)
+	}
+
+	// 获取total SELECT COUNT(*) FROMT t Where ....
+	countSQL, args := query.BuildCount()
+	countStmt, err := s.db.Prepare(countSQL)
+	if err != nil {
+		return nil, exception.NewInternalServerError(err.Error())
+	}
+
+	defer countStmt.Close()
+	err = countStmt.QueryRow(args...).Scan(&set.Total)
+	if err != nil {
+		return nil, exception.NewInternalServerError(err.Error())
+	}
+	return set, nil
 }
-func (s *service) DescribeTask(ctx context.Context, req *task.DescribeTaskRequest) (*task.Task, error) {
-	return nil, nil
+
+func (s *service) DescribeTask(ctx context.Context, req *task.DescribeTaskRequest) (
+	*task.Task, error) {
+	query := sqlbuilder.NewQuery(queryTaskSQL)
+	query.Where("id = ?", req.Id)
+
+	querySQL, args := query.BuildQuery()
+	queryStmt, err := s.db.Prepare(querySQL)
+	if err != nil {
+		return nil, err
+	}
+	defer queryStmt.Close()
+
+	ins := task.NewDefaultTask()
+	err = queryStmt.QueryRow(args...).Scan(
+		&ins.Id, &ins.Region, &ins.ResourceType, &ins.SecretId, &ins.SecretDescription, &ins.Timeout,
+		&ins.Status, &ins.Message, &ins.StartAt, &ins.EndAt, &ins.TotalSucceed, &ins.TotalFailed,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return ins, nil
 }
-func (s *service) QueryTaskRecord(ctx context.Context, req *task.QueryTaskRecordRequest) (*task.RecordSet, error) {
-	return nil, nil
+
+func (s *service) QueryTaskRecord(ctx context.Context, req *task.QueryTaskRecordRequest) (
+	*task.RecordSet, error) {
+	query := sqlbuilder.NewQuery(queryTaskRecordSQL)
+	query.Where("task_id = ?", req.TaskId)
+
+	querySQL, args := query.BuildQuery()
+	queryStmt, err := s.db.Prepare(querySQL)
+	if err != nil {
+		return nil, err
+	}
+	defer queryStmt.Close()
+
+	set := task.NewRecordSet()
+
+	rows, err := queryStmt.Query(args...)
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		rc := task.NewDefaultTaskRecord()
+		rows.Scan(
+			&rc.InstanceId, &rc.Name, &rc.IsSuccess, &rc.Message,
+			&rc.TaskId, &rc.CreateAt,
+		)
+		set.Add(rc)
+	}
+
+	// 获取total SELECT COUNT(*) FROMT t Where ....
+	countSQL, args := query.BuildCount()
+	countStmt, err := s.db.Prepare(countSQL)
+	if err != nil {
+		return nil, exception.NewInternalServerError(err.Error())
+	}
+
+	defer countStmt.Close()
+	err = countStmt.QueryRow(args...).Scan(&set.Total)
+	if err != nil {
+		return nil, exception.NewInternalServerError(err.Error())
+	}
+
+	return set, nil
 }

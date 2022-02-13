@@ -174,3 +174,7 @@ func NewQueryHostRequestFromHTTP(r *http.Request) *QueryHostRequest {
 		Keywords: qs.Get("keywords"),
 	}
 }
+
+func (h *Host) ShortDesc() string {
+	return h.Information.PublicIPToString()
+}

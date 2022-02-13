@@ -44,9 +44,9 @@ func (s *service) syncHost(ctx context.Context, secret *secret.Secret, t *task.T
 			return
 		}
 		s.log.Debugf("check account %s", client.AccountID())
-		operater := cvmOp.NewOperator(client.CvmClient())
+		operater := cvmOp.NewCvmOperator(client.CvmClient())
 		operater.WithAccountId(client.AccountID())
-		req := cvmOp.NewPageQueryRequest(int(secret.RequestRate))
+		req := cvmOp.NewPageQueryRequest(5, int(secret.RequestRate))
 		pager = operater.PageQuery(req)
 	default:
 		t.Failed(fmt.Sprintf("unsuport vendor %s", secret.Vendor))
