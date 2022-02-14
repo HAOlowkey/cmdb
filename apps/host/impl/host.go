@@ -24,6 +24,7 @@ func (s *service) SyncHost(ctx context.Context, ins *host.Host) (
 
 	// 检查ins已经存在 我们则需要更新ins
 	if exist != nil {
+		exist.Put(host.NewUpdateHostDataByIns(ins))
 		if err := s.update(ctx, ins); err != nil {
 			return nil, err
 		}

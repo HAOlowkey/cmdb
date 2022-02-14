@@ -118,7 +118,7 @@ func (s *service) update(ctx context.Context, ins *host.Host) error {
 		_, err = stmt.Exec(
 			info.ExpireAt, info.Category, info.Type, info.Name, info.Description,
 			info.Status, info.UpdateAt, base.SyncAt, info.SyncAccount,
-			info.PublicIp, info.PrivateIp, info.PayType, base.DescribeHash, base.ResourceHash,
+			info.PublicIPToString(), info.PrivateIPToString(), info.PayType, base.DescribeHash, base.ResourceHash,
 			ins.Base.SecretId, ins.Base.Id,
 		)
 		if err != nil {

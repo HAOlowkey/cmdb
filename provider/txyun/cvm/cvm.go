@@ -31,8 +31,9 @@ func (o *AccountIdGetter) GetAccountId() string {
 
 func NewCvmOperator(client *cvm.Client) *CvmOperator {
 	return &CvmOperator{
-		client: client,
-		log:    zap.L().Named("CVM OPERATOR"),
+		client:          client,
+		log:             zap.L().Named("CVM OPERATOR"),
+		AccountIdGetter: &AccountIdGetter{},
 	}
 }
 
@@ -64,6 +65,7 @@ func (o *CvmOperator) transferOne(ins *cvm.Instance) *host.Host {
 	h.Information.PublicIp = utils.SlicePtrStrv(ins.PublicIpAddresses)
 	h.Information.PrivateIp = utils.SlicePtrStrv(ins.PrivateIpAddresses)
 	h.Information.PayType = utils.PtrStrV(ins.InstanceChargeType)
+	h.Information.SyncAccount = o.GetAccountId()
 
 	h.Describe.Cpu = utils.PtrInt64(ins.CPU)
 	h.Describe.Memory = utils.PtrInt64(ins.Memory)

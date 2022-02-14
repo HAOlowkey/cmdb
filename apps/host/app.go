@@ -178,3 +178,10 @@ func NewQueryHostRequestFromHTTP(r *http.Request) *QueryHostRequest {
 func (h *Host) ShortDesc() string {
 	return h.Information.PublicIPToString()
 }
+
+func NewUpdateHostDataByIns(ins *Host) *UpdateHostData {
+	return &UpdateHostData{
+		Information: ins.Information,
+		Describe:    ins.Describe,
+	}
+}
